@@ -48,8 +48,8 @@ struct tuple * findMaximumCrossingSubarray(int low, int mid, int high, int * arr
  * O(n)
  */
 struct tuple * findMaximumSubarray(int low, int high, int * array) {
-	struct tuple * returnValue = malloc(sizeof(struct tuple));
 	if (high == low) {
+		struct tuple * returnValue = malloc(sizeof(struct tuple));
 		returnValue->low = low;
 		returnValue->high = high;
 		returnValue->sum = array[low];
@@ -60,10 +60,16 @@ struct tuple * findMaximumSubarray(int low, int high, int * array) {
 		struct tuple * rightMax = findMaximumSubarray(mid+1, high, array);
 		struct tuple * crossMax = findMaximumCrossingSubarray(low, mid, high, array);
 		if ((leftMax->sum >= rightMax->sum) && (leftMax->sum >= crossMax->sum)) {
+			free(rightMax);
+			free(crossMax);
 			return leftMax;
 		} else if ((rightMax->sum >= leftMax->sum) && (rightMax->sum >= crossMax->sum)) {
+			free(leftMax);
+			free(crossMax);
 			return rightMax;
 		} else {
+			free(leftMax);
+			free(rightMax);
 			return crossMax;
 		}
 	}
@@ -92,4 +98,6 @@ int main(int argc, char ** argv) {
 
 	struct tuple * result = findMaximumSubarray(0, argc-1, array);
 	printTuple(result);
+	free(array);
+	free(result);
 }
